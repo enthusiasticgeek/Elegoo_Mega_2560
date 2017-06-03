@@ -6,4 +6,4 @@ all:
         #avr-objcopy -O ihex -R .eeprom $(file) $(file).hex
         avr-objcopy -O ihex -R .flash $(file) $(file).hex
 burn:
-        sudo avrdude -c wiring -p m2560 -P /dev/ttyACM0 -b 115200 -V -U flash:w:$(file).hex -C arduino-1.8.2/hardware/tools/avr/etc/avrdude.conf -D
+        sudo avrdude -c wiring -p m2560 -P /dev/ttyACM0 -b 115200 -V -U flash:w:$(file).hex -C avrdude.conf -D

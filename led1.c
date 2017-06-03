@@ -15,7 +15,7 @@ int main (void)
 
  //Setup the clock
   cli();            //Disable global interrupts
-  TCCR1B |= 1<<CS12 | 0<<CS11 | 1<<CS10;  //Divide by 1024
+  TCCR1B |= 1<<CS12 | 0<<CS11 | 1<<CS10;  //Divide by 1024 (We are using 16 MHz external Crystal)
   //OCR1A = 15624;        //Count 15624 cycles for 1 second interrupt
   OCR1A = 7812;        //Count 7812 cycles for 0.5 second interrupt (LED being 0.5 sec ON and 0.5 sec OFF)
   TCCR1B |= 1<<WGM12;     //Put Timer/Counter1 in CTC mode

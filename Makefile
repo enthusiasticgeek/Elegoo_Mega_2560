@@ -1,4 +1,4 @@
-file=led1
+file=blink_led1
 MMCU=atmega2560
 all:
 	avr-gcc -Os -DF_CPU=16000000UL -mmcu=$(MMCU) -c -o $(file).o $(file).c

@@ -5,4 +5,4 @@ AVRGCC example source files for Elegoo Atmega2560 board.
 
 1. In the Makefile set the file name as one wishes.
 2. Then issue command 'make'
-3. Then to load the hex file issue the command 'make burn' after connecting USB to Elegoo Atmega 2560.
+3. Then to load the hex file issue the command 'make burn' after connecting USB cable to Elegoo Atmega 2560.

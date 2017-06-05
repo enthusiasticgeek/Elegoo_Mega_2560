@@ -1,5 +1,6 @@
 # Elegoo_Mega_2560
 AVRGCC example source files for Elegoo Atmega2560 board.
+![alt text](https://github.com/enthusiasticgeek/Elegoo_Mega_2560/blob/master/arduino-2233042_640.jpg "ARDUINO")
 
 **Pre-requisites: (Tested on Ubuntu 16.04 LTS)**
 

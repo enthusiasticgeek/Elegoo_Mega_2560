@@ -37,10 +37,10 @@ int main(void)
 {
     unsigned long timer_frequency;
  
-    DDRD |= _BV(D6);
+    DDRD |= _BV(DDD6);
     //Set prescalar 256
     TCCR0B = _BV(CS02);
-    timer_frequency = div_round(F_CPU, 256);
+    timer_frequency = division_round(F_CPU, 256);
  
     while(1)
     {

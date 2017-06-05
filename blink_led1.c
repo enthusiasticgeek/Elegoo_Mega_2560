@@ -1,4 +1,5 @@
 //Inspired from http://hackaday.com/2010/11/19/
+//This is to blink the Elegoo onboard LED
 
 #include <avr/io.h>
 #include <avr/interrupt.h>

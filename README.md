@@ -18,3 +18,4 @@ AVRGCC example source files for Elegoo Atmega2560 board.
    
 1. Freedom Embedded Blog by Balau https://balau82.wordpress.com/arduino-in-c/
 2. Hackaday AVR programming http://hackaday.com/2010/10/23/avr-programming-introduction/
+3. Elegoo https://www.elegoo.com/download/

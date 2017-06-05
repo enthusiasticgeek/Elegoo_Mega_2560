@@ -7,3 +7,5 @@ AVRGCC example source files for Elegoo Atmega2560 board.
 2. Then issue command '**make**'
 3. Then to load the hex file issue the command '**make burn**' after connecting USB cable to Elegoo Atmega 2560.
    **Note:** This will require the user to enter password.
+   
+   **Note:** avrdude.conf file was adapted from Arduino Linux tgz package.

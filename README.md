@@ -29,3 +29,4 @@ http://download.arduino.org/products/MEGA2560/Arduino_MEGA_2560-Rev3d-SCH.pdf
 1. Freedom Embedded Blog by Balau https://balau82.wordpress.com/arduino-in-c/
 2. Hackaday AVR programming by Mike Szczys http://hackaday.com/2010/10/23/avr-programming-introduction/
 3. Elegoo https://www.elegoo.com/download/
+4. AVR atmega PWM http://www.ermicro.com/blog/?p=1971

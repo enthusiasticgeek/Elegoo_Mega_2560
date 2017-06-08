@@ -7,6 +7,14 @@ AVRGCC example source files for Elegoo Atmega2560 board.
 1. sudo apt-get install gcc-avr avr-libc avrdude 
 2. Some Editor (vim, emacs, eclipse, gedit, notepad++, etc) 
 
+**Datasheet**
+
+http://www.atmel.com/Images/Atmel-2549-8-bit-AVR-Microcontroller-ATmega640-1280-1281-2560-2561_datasheet.pdf
+
+**Schematics**
+
+http://download.arduino.org/products/MEGA2560/Arduino_MEGA_2560-Rev3d-SCH.pdf
+
 **How to Use**
 
 1. Issue the following command while setting the '**file**' variable to C source as one wishes (without file extension) for building source code. (e.g. for *blink_led.c*) source file issue the command **make file=blink_led**

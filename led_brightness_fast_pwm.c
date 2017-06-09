@@ -1,3 +1,5 @@
+//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
+
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -30,8 +32,8 @@ int main(void)
   // Initial TIMER4 Fast PWM
   // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
   // f_PWM = 16 MHz / (1024 * TOP) = X Hz
-  TCCR4A |= 0<<WGM41 | 1<<WGM40; // Fast PWM 8 Bit
-  TCCR4B |= 1<<WGM42; // Fast PWM 8 Bit
+  TCCR4A |= 0<<WGM41 | 1<<WGM40; // Fast PWM 16 Bit timer
+  TCCR4B |= 1<<WGM42; // Fast PWM 16 Bit timer
   // Clear OCA4 on Compare Match, Set OC4A at BOTTOM 
   TCCR4A |= 1<<COM4A1 | 0<<COM4A0;
   // Used 1024 Prescaler

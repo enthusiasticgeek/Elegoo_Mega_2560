@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+//Connect PWM GND pin to 330 Ohms resistor. Connect LED with -ve towards resistor and +ve towards PWM pin 6 PWM on Arduino
+
 int main(void)
 {
   unsigned char duty_cycle;
@@ -14,9 +16,9 @@ int main(void)
 
   //This pin PORTH3 is tied to 16 bit timer TC4 and OCR4A is the register to use it
 
-   // Reset the TIMER4 16 bit Counter
+   // Set the TIMER4 16 bit Counter -> This will be TOP value
    TCNT4H = 0;
-   TCNT4L = 0;
+   TCNT4L = 0XFF;
 
    // Set the TIMER4 PWM Duty Cycle on OCR4AH and OCR4AL
    // Always use half of the TOP value (PWM Duty Cycle ~ 50%)
@@ -38,13 +40,20 @@ int main(void)
   duty_cycle=0;	// Initial Duty Cycle for Channel A
 
   for(;;) {            // Loop Forever
+    //Gradually increase LED brightness
     while(duty_cycle < 0xFF) {
        duty_cycle += 1;
        OCR4AH=(duty_cycle >> 8 ) & 0x00FF;
        OCR4AL=duty_cycle;
        _delay_ms(10);
     }
+    //Gradually decrease LED brightness
+    while(duty_cycle > 0x00) {
+       duty_cycle -= 1;
+       OCR4AH=(duty_cycle >> 8 ) & 0x00FF;
+       OCR4AL=duty_cycle;
+       _delay_ms(10);
+    }
   }
-
   return 0;	        // Standard Return Code
 }

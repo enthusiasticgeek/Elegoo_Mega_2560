@@ -2,6 +2,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 //Connect PWM GND pin to 330 Ohms resistor. Connect LED with -ve towards resistor and +ve towards PWM pin 6 PWM on Arduino
 

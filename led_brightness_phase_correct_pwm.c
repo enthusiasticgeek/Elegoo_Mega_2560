@@ -1,4 +1,4 @@
-//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
+//Copyright (c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -18,7 +18,7 @@ int main(void)
   PORTH &= ~_BV(PORTH3);
 
   //This pin PORTH3 is tied to 16 bit timer TC4 and OCR4A is the register to use it
-   //Clear Interrupts
+   //Disable Interrupts
    cli(); 
    // Set the TIMER4 16 bit Counter -> This will be TOP value in some modes of PWM
    TCNT4H = 0;
@@ -31,16 +31,17 @@ int main(void)
    OCR4AH=(duty_cycle >> 8 ) & 0x00FF;
    OCR4AL=duty_cycle;
 
-  // Initial TIMER4 Fast PWM
-  // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
+  // Initial TIMER4 Phase correct PWM
+  // Phase correct PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
   // f_PWM = 16 MHz / (1024 * TOP) = X Hz
-  TCCR4A |= 0<<WGM41 | 1<<WGM40; // Fast PWM 8-bit with 16 Bit timer
-  TCCR4B |= 1<<WGM42; // Fast PWM 8-bit with 16 Bit timer
-  //Clear OC4A on compare match, set OC4A at BOTTOM (non-inverting mode)
-  TCCR4A |= 1<<COM4A1 | 0<<COM4A0;
+  TCCR4A |= 0<<WGM41 | 1<<WGM40; // Phase correct 8-bit PWM with 16 Bit timer
+  TCCR4B |= 0<<WGM42; // Phase correct 8-bit PWM with 16 Bit timer
+  //Set OC4A on compare match when up-counting
+  //Clear OC4A on compare match when downcounting
+  TCCR4A |= 1<<COM4A1 | 1<<COM4A0;
   // Used 1024 Prescaler
   TCCR4B |= 1<<CS12 | 0<<CS11 | 1<<CS10;  //Divide by 1024 (We are using 16 MHz external Crystal)  
-  //Set Interrupts
+  //Enable Interrupts
   sei();
   duty_cycle=0;	// Initial Duty Cycle for Channel A
 

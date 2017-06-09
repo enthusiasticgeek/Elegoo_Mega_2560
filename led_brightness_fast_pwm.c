@@ -17,7 +17,7 @@ int main(void)
   PORTH &= ~_BV(PORTH3);
 
   //This pin PORTH3 is tied to 16 bit timer TC4 and OCR4A is the register to use it
-
+   cli(); 
    // Set the TIMER4 16 bit Counter -> This will be TOP value
    TCNT4H = 0;
    TCNT4L = 0XFF;
@@ -38,7 +38,7 @@ int main(void)
   TCCR4A |= 1<<COM4A1 | 0<<COM4A0;
   // Used 1024 Prescaler
   TCCR4B |= 1<<CS12 | 0<<CS11 | 1<<CS10;  //Divide by 1024 (We are using 16 MHz external Crystal)  
-
+  sei();
   duty_cycle=0;	// Initial Duty Cycle for Channel A
 
   for(;;) {            // Loop Forever

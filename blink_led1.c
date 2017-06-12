@@ -1,3 +1,4 @@
+//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
 //Inspired from http://hackaday.com/2010/11/19/
 //This is to blink the Elegoo onboard LED
 

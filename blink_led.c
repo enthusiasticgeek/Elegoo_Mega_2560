@@ -1,3 +1,4 @@
+//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
 //Inspired and modified code https://balau82.wordpress.com/2011/03/29/programming-arduino-uno-in-pure-c/
 //This is to blink the Elegoo onboard LED
 

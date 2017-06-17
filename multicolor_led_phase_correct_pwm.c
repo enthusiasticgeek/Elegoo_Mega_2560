@@ -6,7 +6,7 @@
 
 //Connect PWM GND pin to 330 Ohms resistor. Connect RED LED terminal with -ve towards resistor and +ve towards PWM pin 6 PWM on Arduino
 //Connect PWM GND pin to 330 Ohms resistor. Connect GREEN LED terminal with -ve towards resistor and +ve towards PWM pin 5 PWM on Arduino
-//Connect PWM GND pin to 330 Ohms resistor. Connect BLUE LED terminal with -ve towards resistor and +ve towards PWM pin 2 PWM on Arduino
+//Connect PWM GND pin to 330 Ohms resistor. Connect BLUE LED terminal with -ve towards resistor and +ve towards PWM pin 3 PWM on Arduino
 //Connect LED GND to GND of the circuit.
 
 int main(void)

@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+//Connect pin 13 on Arduino to +ve side Active buzzer and GND to -ve pin on Active buzzer.
+
 #define C0  16
 #define Cc0 17
 #define D0  18

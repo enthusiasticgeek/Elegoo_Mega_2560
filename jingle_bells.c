@@ -84,8 +84,6 @@
 
 #define C6 1047
 
-#define SILENT 0xFFFF
-
 static unsigned long division(unsigned long dividend, unsigned long divisor)
 {
     return (dividend + (divisor/2)) / divisor;

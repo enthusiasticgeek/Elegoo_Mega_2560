@@ -89,7 +89,10 @@ freq OCnx = F_CPU / (2 * PRESCALAR * (1 + OCRnx))
 e.g. to create 880 Hz sound
 880 = 16 MHz / ( 2 * 256 * (1 + OCRnx))
 (16 MHz / ( 880 * 2 * 256 )) - 1 = OCRnx
-= 34.51 =~ 35
+OCRnx = 34.51 =~ 35
+
+In our case
+OCR0A = 35 for 880 Hz sound that corresponds to A5 scale.
 */
 
 /*

@@ -1,6 +1,5 @@
 //(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
-//Inspired and modified code https://balau82.wordpress.com/2011/03/29/programming-arduino-uno-in-pure-c/
-//This is to blink the Elegoo onboard LED
+//This is to turn ON/OFF the Elegoo onboard LED when an input is applied
 
 #include <avr/io.h>
 #include <util/delay.h>

@@ -6,7 +6,7 @@
 #include <util/delay.h>
 
 int main(void) {
-   /* Digital Output Pin 13 LED on Arduino Mega 2560*/
+   /* Digital Output Pin 13 onboard LED on Arduino Mega 2560*/
    DDRB |= _BV(PB7);
    /* Digital Input Pin 6 on Arduino Mega 2560*/
    /* Pull up resistor 10K Ohms between 5V and one end push button switch; 

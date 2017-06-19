@@ -85,6 +85,14 @@
 #define C6 1047
 
 /*
+freq OCnx = F_CPU / (2 * PRESCALAR * (1 + OCRnx))
+e.g. to create 880 Hz sound
+880 = 16 MHz / ( 2 * 256 * (1 + OCRnx))
+(16 MHz / ( 880 * 2 * 256 )) - 1 = OCRnx
+= 34.51 =~ 35
+*/
+
+/*
 
 Jingle bells, Jingle bells
 

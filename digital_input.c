@@ -11,7 +11,8 @@ int main(void) {
    /* Digital Output Pin 13 LED on Arduino Mega 2560*/
    DDRB |= _BV(PB7);
    /* Digital Input Pin 6 on Arduino Mega 2560*/
-   /* Pull down resistor 10K Ohms between GND and one end push button switch and connect the other end of push button switch to 5V*/
+   /* Pull down resistor 10K Ohms between GND and one end push button switch
+   and connect the other end of push button switch to 5V */
    DDRH &= ~(_BV(PH3));
    for(;;){
 

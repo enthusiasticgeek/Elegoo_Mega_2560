@@ -85,6 +85,8 @@
 #define C6 1047
 
 /*
+From Atmega2560 datasheet
+
 freq OCnx = F_CPU / (2 * PRESCALAR * (1 + OCRnx))
 e.g. to create 880 Hz sound
 880 = 16 MHz / ( 2 * 256 * (1 + OCRnx))

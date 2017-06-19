@@ -14,7 +14,6 @@ int main(void) {
    and connect the other end of push button switch to GND*/
    DDRH &= ~(_BV(PH3));
    for(;;){
-
         // While Button is pressed, LED is on
         if (bit_is_clear(PINH, PH3)) {
         PORTB |= (1<<PB7); // put LED HIGH

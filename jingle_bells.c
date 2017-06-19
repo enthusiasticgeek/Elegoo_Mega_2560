@@ -84,6 +84,42 @@
 
 #define C6 1047
 
+/*
+
+Jingle bells, Jingle bells
+
+E-E-E--E-E-E--
+
+Jingle all the way
+
+E-G-C-D-E--
+
+Oh what fun it is to ride in a
+
+F-F-F-F-F-E-E-E--
+
+one horse op - en sleigh
+
+E-D-D-E-D-G--
+
+Jingle bells, Jingle bells
+
+E-E-E--E-E-E--
+
+Jingle all the way
+
+E-G-C-D-E--
+
+Oh what fun it is to ride in a
+
+F-F-F-F-F-E-E-E--
+
+one horse op - en sleigh
+
+G-G-F-D-C--
+
+*/
+
 static unsigned long division(unsigned long dividend, unsigned long divisor)
 {
     return (dividend + (divisor/2)) / divisor;

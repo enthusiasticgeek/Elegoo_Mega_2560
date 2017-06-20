@@ -3,6 +3,8 @@
 //Connect digital pin 6 to a push button switch's one end 
 //while connecting GND to another end of push button switch (no need of external pull-up or pull-down resistors)
 
+//This code can also be adapted to tilt switch
+
 #include <avr/io.h>
 #include <util/delay.h>
 

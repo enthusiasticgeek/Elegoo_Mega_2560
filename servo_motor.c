@@ -4,7 +4,7 @@
 #include <util/delay.h>
 #include <stdint.h>
 
-//Connect pin 13 on Arduino to +ve side Active buzzer and GND to -ve pin on Active buzzer.
+//Connect pin 6 on Arduino to orange wire on servo, red wire on servo to +5V and brown wire on servo to GND.
 
 /*
 From Atmega2560 datasheet
@@ -95,6 +95,7 @@ int main(void)
         } else {
            duty_cycle = duty_cycle_start;
         }
+	_delay_ms(1);
     }
     return 0;
 }

@@ -90,10 +90,13 @@ int main(void)
     while(1)
     {
         // 0 degrees to 180 degrees
-        if ((duty_cycle <= duty_cycle_end) && (duty_cycle >= duty_cycle_start)) {
+        if (duty_cycle < duty_cycle_end){		
            OCR4A = duty_cycle++;
+	} else if (duty_cycle >= duty_cycle_start) {
+           OCR4A = duty_cycle--;
         } else {
            duty_cycle = duty_cycle_start;
+           OCR4A = duty_cycle;
         }
 	_delay_ms(1);
     }

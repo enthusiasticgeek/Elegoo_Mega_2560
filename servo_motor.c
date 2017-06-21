@@ -64,19 +64,18 @@ int main(void)
     cli(); 
 
     timer_frequency = division(F_CPU, prescalar);
-    ICR4 = (uint16_t)division(timer_frequency, desired_frequency) - 1;
+    ICR4 = division(timer_frequency, desired_frequency) - 1;
 
     // use 5% duty cycle to begin
-    duty_cycle_start=(uint16_t)division(ICR4, 500); //dividend 5*100
+    duty_cycle_start=division(division(timer_frequency, desired_frequency)-1, 500); //dividend 5*100
     // use 10% duty cycle to begin
-    duty_cycle_end=(uint16_t)division(ICR4, 1000); //dividend 10*100
+    duty_cycle_end=division(division(timer_frequency, desired_frequency)-1, 1000); //dividend 10*100
 
     //initialize duty cycle
-    duty_cycle = duty_cycle_start;
+    duty_cycle = 250;//duty_cycle_start;
 
     // Initial TIMER4 Fast PWM
     // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
-    // f_PWM = 16 MHz / (1024 * TOP) = X Hz
     TCCR4A |= 1<<WGM41 | 0<<WGM40; // Fast PWM - Mode 14 with 16 Bit timer
     TCCR4B |= 1<<WGM43 | 1<<WGM42; // Fast PWM - Mode 14 with 16 Bit timer
     //Clear OC4A on compare match, set OC4A at BOTTOM (non-inverting mode)
@@ -89,16 +88,32 @@ int main(void)
  
     while(1)
     {
-        // 0 degrees to 180 degrees
-        if (duty_cycle < duty_cycle_end){		
-           OCR4A = duty_cycle++;
-	} else if (duty_cycle >= duty_cycle_start) {
-           OCR4A = duty_cycle--;
-        } else {
-           duty_cycle = duty_cycle_start;
-           OCR4A = duty_cycle;
-        }
-	_delay_ms(1);
+	 
+        
+         OCR4A = 250;
+	_delay_ms(1000);
+
+        // OCR4A = 312;
+	//_delay_ms(1000);
+
+         OCR4A = 375;
+	_delay_ms(1000);
+
+         //OCR4A = 438;
+	//_delay_ms(1000);
+
+         OCR4A = 500;
+	_delay_ms(1000);
+
+         //OCR4A = 562;
+	//_delay_ms(1000);
+
+         OCR4A = 624;
+	_delay_ms(1000);
+
+        // OCR4A = 686;
+	//_delay_ms(1000);
+        
     }
     return 0;
 }

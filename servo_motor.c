@@ -72,7 +72,7 @@ int main(void)
     duty_cycle_end=division(division(timer_frequency, desired_frequency)-1, 1000); //dividend 10*100
 
     //initialize duty cycle
-    duty_cycle = 250;//duty_cycle_start;
+    duty_cycle = duty_cycle_start;
 
     // Initial TIMER4 Fast PWM
     // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler

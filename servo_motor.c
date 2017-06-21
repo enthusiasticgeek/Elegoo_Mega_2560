@@ -49,9 +49,9 @@ int main(void)
     unsigned long timer_frequency;
     unsigned long desired_frequency = 50; // 50 Hz
     const unsigned long prescalar = 64;
-    unsigned long duty_cycle_start;
-    unsigned long duty_cycle;
-    unsigned long duty_cycle_end;
+    //unsigned long duty_cycle_start;
+    //unsigned long duty_cycle;
+    //unsigned long duty_cycle_end;
 
     // Initial PORT 
   
@@ -66,14 +66,14 @@ int main(void)
     timer_frequency = division(F_CPU, prescalar);
     ICR4 = division(timer_frequency, desired_frequency) - 1;
 
-    unsigned long icr4_value = division(timer_frequency, desired_frequency) - 1;
+    //unsigned long icr4_value = division(timer_frequency, desired_frequency) - 1;
     // use 3% duty cycle to begin
-    duty_cycle_start=division(icr4_value, 300); //dividend 3*100
+    //duty_cycle_start=division(icr4_value, 300); //dividend 3*100
     // use 11% duty cycle to end
-    duty_cycle_end=division(icr4_value, 1100); //dividend 11*100
+    //duty_cycle_end=division(icr4_value, 1100); //dividend 11*100
 
     //initialize duty cycle
-    duty_cycle = duty_cycle_start;
+    //duty_cycle = duty_cycle_start;
 
     // Initial TIMER4 Fast PWM
     // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
@@ -90,6 +90,8 @@ int main(void)
     while(1)
     {
 
+        // We vary the duty cycle between 3% and 11% @5V -> To move from 0 degrees to 180 degrees
+        //0 degrees
           OCR4A = 150;
 	_delay_ms(500);
  
@@ -101,6 +103,8 @@ int main(void)
 
          OCR4A = 312;
 	_delay_ms(500);
+ 
+        //~ 90 degrees
 
          OCR4A = 375;
 	_delay_ms(500);
@@ -111,14 +115,9 @@ int main(void)
          OCR4A = 500;
 	_delay_ms(500);
 
+        //180 degrees
          OCR4A = 562;
 	_delay_ms(500);
-
-        //OCR4A = 624;
-	//_delay_ms(500);
-
-        // OCR4A = 686;
-	//_delay_ms(1000);
         
     }
     return 0;

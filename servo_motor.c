@@ -49,9 +49,9 @@ int main(void)
     unsigned long timer_frequency;
     unsigned long desired_frequency = 50; // 50 Hz
     const unsigned long prescalar = 64;
-    uint16_t duty_cycle_start;
-    uint16_t duty_cycle;
-    uint16_t duty_cycle_end;
+    unsigned long duty_cycle_start;
+    unsigned long duty_cycle;
+    unsigned long duty_cycle_end;
 
     // Initial PORT 
   
@@ -66,10 +66,11 @@ int main(void)
     timer_frequency = division(F_CPU, prescalar);
     ICR4 = division(timer_frequency, desired_frequency) - 1;
 
-    // use 5% duty cycle to begin
-    duty_cycle_start=division(division(timer_frequency, desired_frequency)-1, 500); //dividend 5*100
-    // use 10% duty cycle to begin
-    duty_cycle_end=division(division(timer_frequency, desired_frequency)-1, 1000); //dividend 10*100
+    unsigned long icr4_value = division(timer_frequency, desired_frequency) - 1;
+    // use 3% duty cycle to begin
+    duty_cycle_start=division(icr4_value, 300); //dividend 3*100
+    // use 11% duty cycle to end
+    duty_cycle_end=division(icr4_value, 1100); //dividend 11*100
 
     //initialize duty cycle
     duty_cycle = duty_cycle_start;
@@ -88,28 +89,33 @@ int main(void)
  
     while(1)
     {
-	 
-        
-         OCR4A = 250;
-	_delay_ms(1000);
 
-        // OCR4A = 312;
-	//_delay_ms(1000);
+          OCR4A = 150;
+	_delay_ms(500);
+ 
+          OCR4A = 200;
+	_delay_ms(500);
+       
+         OCR4A = 250;
+	_delay_ms(500);
+
+         OCR4A = 312;
+	_delay_ms(500);
 
          OCR4A = 375;
-	_delay_ms(1000);
+	_delay_ms(500);
 
-         //OCR4A = 438;
-	//_delay_ms(1000);
+         OCR4A = 438;
+	_delay_ms(500);
 
          OCR4A = 500;
-	_delay_ms(1000);
+	_delay_ms(500);
 
-         //OCR4A = 562;
-	//_delay_ms(1000);
+         OCR4A = 562;
+	_delay_ms(500);
 
-         OCR4A = 624;
-	_delay_ms(1000);
+        //OCR4A = 624;
+	//_delay_ms(500);
 
         // OCR4A = 686;
 	//_delay_ms(1000);

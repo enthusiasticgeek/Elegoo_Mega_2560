@@ -16,6 +16,9 @@ http://www.atmel.com/Images/Atmel-2549-8-bit-AVR-Microcontroller-ATmega640-1280-
 
 http://download.arduino.org/products/MEGA2560/Arduino_MEGA_2560-Rev3d-SCH.pdf
 
+**Goal**
+To teach the reader how to program Arduino based on AVR ATMEGA 2560 directly using avrgcc. Hence, I have tried to keep the code as simple as possible.
+
 **How to Use**
 
 1. Issue the following command while setting the '**file**' variable to C source as one wishes (without file extension) for building source code. (e.g. for *blink_led.c*) source file issue the command **make file=blink_led**

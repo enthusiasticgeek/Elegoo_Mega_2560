@@ -18,7 +18,7 @@ e.g. to create 50 Hz pulse as required by SG90 servo motor
 ICRn = 4999
 */
 
-
+static unsigned long positions[8] = {150, 200, 250, 312, 375, 438, 500, 562};
 static unsigned long division(unsigned long dividend, unsigned long divisor)
 {
     return (dividend + (divisor/2)) / divisor;
@@ -87,10 +87,19 @@ int main(void)
     //Set Interrupts
     sei();
  
+    unsigned int i = 0;
     while(1)
     {
-
         // We vary the duty cycle between 3% and 11% @5V -> To move from 0 degrees to 180 degrees
+        for(i = 0; i < 8; i++){
+           OCR4A = positions[i];
+	   _delay_ms(500);
+        }
+        //simple logic to reset
+        if (i >= 8) {
+            i = 0;
+        }
+        /*
         //0 degrees
           OCR4A = 150;
 	_delay_ms(500);
@@ -118,7 +127,7 @@ int main(void)
         //180 degrees
          OCR4A = 562;
 	_delay_ms(500);
-        
+        */
     }
     return 0;
 }

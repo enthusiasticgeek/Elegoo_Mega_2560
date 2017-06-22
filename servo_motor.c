@@ -95,7 +95,7 @@ int main(void)
            OCR4A = positions[i];
 	   _delay_ms(500);
         }
-        //simple logic to reset
+        //simple logic to reset the count
         if (i >= 8) {
             i = 0;
         }

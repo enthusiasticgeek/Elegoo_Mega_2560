@@ -26,59 +26,66 @@ From Atmega2560 datasheet
 
 */
 
-static unsigned long positions[8] = {150, 200, 250, 312, 375, 438, 500, 562};
-static unsigned long division(unsigned long dividend, unsigned long divisor)
-{
-    return (dividend + (divisor/2)) / divisor;
-}
+//Connect VCC to 330 Ohms to +ve end of LED and -ve end of LED to pin 7 of Arduino
+//Connect VCC to 330 Ohms to +ve end of LED and -ve end of LED to pin 6 of Arduino
+//Connect LDR from A7 pin on ADC port of Arduino to GND. Connect 1K from A7 to +5V
 
 int main(void)
 {
-    unsigned long timer_frequency;
-    unsigned long desired_frequency = 50; // 50 Hz
-    const unsigned long prescalar = 64;
-    //unsigned long duty_cycle_start;
-    //unsigned long duty_cycle;
-    //unsigned long duty_cycle_end;
-
     // Initial PORT 
   
     //Set PORTH to OUTPUT
     DDRH |= _BV(DDH3);
     //Set the output port H pin 3 to 0 (LOW) state
     PORTH &= ~_BV(PORTH3);
+  
+    //Set PORTH to OUTPUT
+    DDRH |= _BV(DDH4);
+    //Set the output port H pin 4 to 0 (LOW) state
+    PORTH &= ~_BV(PORTH4);
 
     //Clear Interrupts
     cli(); 
-
-    timer_frequency = division(F_CPU, prescalar);
-    ICR4 = division(timer_frequency, desired_frequency) - 1;
-
-    //unsigned long icr4_value = division(timer_frequency, desired_frequency) - 1;
-    // use 3% duty cycle to begin
-    //duty_cycle_start=division(icr4_value, 300); //dividend 3*100
-    // use 11% duty cycle to end
-    //duty_cycle_end=division(icr4_value, 1100); //dividend 11*100
-
-    //initialize duty cycle
-    //duty_cycle = duty_cycle_start;
-
-    // Initial TIMER4 Fast PWM
-    // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
-    TCCR4A |= 1<<WGM41 | 0<<WGM40; // Fast PWM - Mode 14 with 16 Bit timer
-    TCCR4B |= 1<<WGM43 | 1<<WGM42; // Fast PWM - Mode 14 with 16 Bit timer
-    //Clear OC4A on compare match, set OC4A at BOTTOM (non-inverting mode)
-    TCCR4A |= 1<<COM4A1 | 0<<COM4A0;
-    // Used 64 Prescaler
-    TCCR4B |= 0<<CS12 | 1<<CS11 | 1<<CS10;  //Divide by 64 (We are using 16 MHz external Crystal)  
-    
+    ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Set ADC -> prescaler to 128 - 125KHz sample rate @ 16MHz
+    ADCSRB |= (0 << ADTS2) | (0 << ADTS1) | (0 << ADTS0); // Set ADC -> Free Running Mode
+    //ADMUX |= (0 << REFS1)| (1 << REFS0); // Set ADC reference to AVCC
+    ADMUX |= (0 << REFS1)| (0 << REFS0); //AREF, Internal VREF  turned off
+    ADMUX |= (1 << ADLAR); // Left adjust ADC result to allow easy 8 bit
     //Set Interrupts
     sei();
- 
-    unsigned int i = 0;
+
     while(1)
     {
-
+         //Clear Interrupts
+         cli();
+         ADMUX |= (1 << MUX2)| (1 << MUX1) |(1 << MUX0); // using ADC7 pin 
+         // No MUX values needed to be changed to use ADC0
+         ADCSRA |= (1 << ADEN); // Enable ADC
+         ADCSRA |= (1 << ADIE); // Enable ADC Interrupt
+         //Set Interrupts
+         sei();
+         ADCSRA |= (1 << ADSC); // Start A2D Conversions
+         //An interrupt is triggered at the end of the conversion
     }
     return 0;
+}
+
+ISR(ADC_vect){
+   //uint16_t ADCtemp;
+
+   //ADCW stores the value
+   unsigned int adc_value = ADCW;
+   //ADCtemp = ADCL;
+   /*shift from low level to high level ADC, from 8bit to 10bit*/
+   //ADCtemp += (ADCH<<8);
+
+   // max ADCH value is 2^8 = 256 hence half of it. I am setting LDAR to one. Hence in comparison using ADCH else if LDAR is zero use lower byte ADCL
+   if (adc_value < 128)
+   {
+      PORTH |= _BV(PORTH3); // Turn on LED1
+      PORTH &= ~_BV(PORTH4); // Turn off LED2
+   } else {
+      PORTH &= ~_BV(PORTH3); // Turn off LED1
+      PORTH |= _BV(PORTH4); // Turn on LED2
+   }
 }

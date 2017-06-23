@@ -91,12 +91,12 @@ int main(void)
     while(1)
     {
         // We vary the duty cycle between 3% and 11% @5V -> To move from 0 degrees to 180 degrees
-        for(i = 0; i < 8; i++){
+        for(i = 0; i < sizeof(positions)/sizeof(unsigned long); i++){
            OCR4A = positions[i];
 	   _delay_ms(500);
         }
         //simple logic to reset the count
-        if (i >= 8) {
+        if (i >= sizeof(positions)/sizeof(unsigned long)) {
             i = 0;
         }
         /*

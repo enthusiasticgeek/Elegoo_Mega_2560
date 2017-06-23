@@ -66,15 +66,6 @@ int main(void)
     timer_frequency = division(F_CPU, prescalar);
     ICR4 = division(timer_frequency, desired_frequency) - 1;
 
-    //unsigned long icr4_value = division(timer_frequency, desired_frequency) - 1;
-    // use 3% duty cycle to begin
-    //duty_cycle_start=division(icr4_value, 300); //dividend 3*100
-    // use 11% duty cycle to end
-    //duty_cycle_end=division(icr4_value, 1100); //dividend 11*100
-
-    //initialize duty cycle
-    //duty_cycle = duty_cycle_start;
-
     // Initial TIMER4 Fast PWM
     // Fast PWM Frequency = fclk / (N * TOP), Where N is the Prescaler
     TCCR4A |= 1<<WGM41 | 0<<WGM40; // Fast PWM - Mode 14 with 16 Bit timer
@@ -99,35 +90,6 @@ int main(void)
         if (i >= sizeof(positions)/sizeof(unsigned long)) {
             i = 0;
         }
-        /*
-        //0 degrees
-          OCR4A = 150;
-	_delay_ms(500);
- 
-          OCR4A = 200;
-	_delay_ms(500);
-       
-         OCR4A = 250;
-	_delay_ms(500);
-
-         OCR4A = 312;
-	_delay_ms(500);
- 
-        //~ 90 degrees
-
-         OCR4A = 375;
-	_delay_ms(500);
-
-         OCR4A = 438;
-	_delay_ms(500);
-
-         OCR4A = 500;
-	_delay_ms(500);
-
-        //180 degrees
-         OCR4A = 562;
-	_delay_ms(500);
-        */
     }
     return 0;
 }

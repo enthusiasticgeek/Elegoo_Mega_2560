@@ -79,7 +79,7 @@ ISR(ADC_vect){
    /*shift from low level to high level ADC, from 8bit to 10bit*/
    //ADCtemp += (ADCH<<8);
 
-   // max ADCH value is 2^8 = 256 hence half of it. I am setting LDAR to one. Hence in comparison using ADCH else if LDAR is zero use lower byte ADCL
+   // max ADCW value is 2^10 = 1024 hence half of it. 
    if (adc_value < 512)
    {
       PORTH |= _BV(PORTH3); // Turn on LED1

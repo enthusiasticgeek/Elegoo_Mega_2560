@@ -63,6 +63,7 @@ int main(void)
              //Instead of logic below for waiting for conversion we wait for ADC conversion complete interrupt
              //while (ADCSRA & (1<<ADSC)); // wait for conversion to complete
        }
+    return 0;
 }
 
 ISR(ADC_vect){

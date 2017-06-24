@@ -28,12 +28,11 @@ From Atmega2560 datasheet
 
 //Connect VCC to 330 Ohms to +ve end of LED and -ve end of LED to pin 7 of Arduino
 //Connect VCC to 330 Ohms to +ve end of LED and -ve end of LED to pin 6 of Arduino
-//Connect LDR from A7 pin on ADC port of Arduino to GND. Connect 1K from A7 to +5V
+//Connect 10K Ohms POTENTIOMETER's center to A7 pin on ADC port of Arduino. One side of POT to to GND. Remaining side of POT to +5V. Connect ARef to +5V and Capacitor 0.1 microFarad between GND and +5V.
+
 
 int main(void)
 {
-    // Initial PORT 
-  
     //Set PORTH to OUTPUT
     DDRH |= _BV(DDH3);
     //Set the output port H pin 3 to 0 (LOW) state
@@ -44,40 +43,31 @@ int main(void)
     //Set the output port H pin 4 to 0 (LOW) state
     PORTH &= ~_BV(PORTH4);
 
+    ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0);
     //Clear Interrupts
     cli(); 
     ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0); // Set ADC -> prescaler to 128 - 125KHz sample rate @ 16MHz
     ADCSRB |= (0 << ADTS2) | (0 << ADTS1) | (0 << ADTS0); // Set ADC -> Free Running Mode
-    //ADMUX |= (0 << REFS1)| (1 << REFS0); // Set ADC reference to AVCC
-    ADMUX |= (0 << REFS1)| (0 << REFS0); //AREF, Internal VREF  turned off
-    ADMUX |= (1 << ADLAR); // Left adjust ADC result to allow easy 8 bit
+    ADMUX |= (0 << REFS1)| (1 << REFS0); // Set ADC reference to AVCC
+    //ADMUX |= (0 << REFS1)| (0 << REFS0); //AREF, Internal VREF  turned off
+    //ADMUX |= (1 << ADLAR); // Left adjust ADC result to allow easy 8 bit
+    ADMUX |= (0 << ADLAR); // Default - right adjust ADC result to allow easy 8 bit
+    ADCSRA |= (1 << ADEN); // Enable ADC
+    ADCSRA |= (1 << ADIE); // Enable ADC Interrupt
+    ADMUX |= (1 << MUX2)| (1 << MUX1) |(1 << MUX0); // using ADC7 pin 
     //Set Interrupts
     sei();
-
-    while(1)
-    {
-         //Clear Interrupts
-         cli();
-         ADMUX |= (1 << MUX2)| (1 << MUX1) |(1 << MUX0); // using ADC7 pin 
-         // No MUX values needed to be changed to use ADC0
-         ADCSRA |= (1 << ADEN); // Enable ADC
-         ADCSRA |= (1 << ADIE); // Enable ADC Interrupt
-         //Set Interrupts
-         sei();
-         ADCSRA |= (1 << ADSC); // Start A2D Conversions
-         //An interrupt is triggered at the end of the conversion
-    }
-    return 0;
+    while (1)
+       {
+             ADCSRA |= (1<<ADSC); // Start conversion
+             //Instead of logic below for waiting for conversion we wait for ADC conversion complete interrupt
+             //while (ADCSRA & (1<<ADSC)); // wait for conversion to complete
+       }
 }
 
 ISR(ADC_vect){
-   //uint16_t ADCtemp;
-
    //ADCW stores the value
    unsigned int adc_value = ADCW;
-   //ADCtemp = ADCL;
-   /*shift from low level to high level ADC, from 8bit to 10bit*/
-   //ADCtemp += (ADCH<<8);
 
    // max ADCW value is 2^10 = 1024 hence half of it. 
    if (adc_value < 512)

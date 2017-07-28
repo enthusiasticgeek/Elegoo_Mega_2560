@@ -43,7 +43,8 @@ void USART_Init(void){
       to change use UCSRC, see AVR datasheet*/ 
    // Enable receiver and transmitter and receive complete interrupt 
    UCSR1B = ((1<<TXEN1)|(1<<RXEN1) | (1<<RXCIE1));
-   UCSR1C = (1<<USBS1)|(1<<UCSZ11)|(1<<UCSZ10);
+   //8-bit data, 1 stop bit, Aynchronous USART	
+   UCSR1C = (1<<UCSZ11)|(1<<UCSZ10);
 }
 
 void USART_SendByte(uint8_t u8Data){

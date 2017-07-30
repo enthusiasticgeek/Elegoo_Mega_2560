@@ -62,11 +62,12 @@ uint8_t USART_ReceiveByte(){
 
 void Led_init(void){
    //outputs, all off
-   DDRB =0xFF;       
+   DDRB = 0xFF;       
    PORTB = 0xFF;        
 }
 
 int main(void){
+   cli();
    USART_Init();   // Initialise USART
    sei();          // enable all interrupts
    Led_init();     // init LEDs for testing

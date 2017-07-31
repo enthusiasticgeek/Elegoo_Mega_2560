@@ -30,8 +30,10 @@ Help - AVR-Libc reference - Library Reference - <avr/interrupt.h>: Interrupts
 for vector names other than USART_RXC_vect for ATmega32 */
 
 ISR(USART1_RX_vect){
-   value = UDR1;            //read UART register into value
+   cli();                   // clear interrupt	
+   value = UDR1;            // read UART register into value
    PORTB = ~value;          // output inverted value on LEDs (0=on)
+   sei();                   // enable interrupts	
 }
 
 void USART_Init(void){

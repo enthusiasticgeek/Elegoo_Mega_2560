@@ -38,15 +38,15 @@ ISR(USART1_RX_vect){
 
 void USART_Init(void){
    // Set baud rate
-   UBRR1L = BAUD_PRESCALE;// Load lower 8-bits into the low byte of the UBRR register
-   UBRR1H = (BAUD_PRESCALE >> 8); 
    /* Load upper 8-bits into the high byte of the UBRR register
       Default frame format is 8 data bits, no parity, 1 stop bit
       to change use UCSRC, see AVR datasheet*/ 
+   UBRR1L = (uint8_t) (BAUD_PRESCALE);// Load lower 8-bits into the low byte of the UBRR register
+   UBRR1H = (uint8_t) (BAUD_PRESCALE >> 8); 
    // Enable receiver and transmitter and receive complete interrupt 
-   UCSR1B = ((1<<TXEN1)|(1<<RXEN1) | (1<<RXCIE1));
-   //8-bit data, 1 stop bit, Aynchronous USART	
-   UCSR1C = (1<<UCSZ11)|(1<<UCSZ10);
+   UCSR1B = ((1<<TXEN1)|(1<<RXEN1)|(0<<UCSZ12)|(1<<RXCIE1));
+   //8-bit data, 1 stop bit, Aynchronous USART, no parity	
+   UCSR1C = (1<<UCSZ11)|(1<<UCSZ10)|(0<<USBS2)|(0<<UMSEL11)|(0<<UMSEL10)|(0<<UPM11)|(0<<UPM10);
 }
 
 void USART_SendByte(uint8_t u8Data){

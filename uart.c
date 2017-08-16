@@ -17,7 +17,7 @@
 #endif
 
 // Define baud rate
-#define USART_BAUDRATE 38400   
+#define USART_BAUDRATE 115200   
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 volatile unsigned char value;  
@@ -46,7 +46,7 @@ void USART_Init(void){
    // Enable receiver and transmitter and receive complete interrupt 
    UCSR1B = ((1<<TXEN1)|(1<<RXEN1)|(0<<UCSZ12)|(1<<RXCIE1));
    //8-bit data, 1 stop bit, Aynchronous USART, no parity	
-   UCSR1C = (1<<UCSZ11)|(1<<UCSZ10)|(0<<USBS2)|(0<<UMSEL11)|(0<<UMSEL10)|(0<<UPM11)|(0<<UPM10);
+   UCSR1C = (1<<UCSZ11)|(1<<UCSZ10)|(0<<USBS1)|(0<<UMSEL11)|(0<<UMSEL10)|(0<<UPM11)|(0<<UPM10);
 }
 
 void USART_SendByte(uint8_t u8Data){

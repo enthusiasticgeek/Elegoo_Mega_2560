@@ -15,6 +15,7 @@ http://www.atmel.com/Images/Atmel-2549-8-bit-AVR-Microcontroller-ATmega640-1280-
 **Schematics**
 
 http://download.arduino.org/products/MEGA2560/Arduino_MEGA_2560-Rev3d-SCH.pdf
+
 https://www.arduino.cc/en/uploads/Main/arduino-mega2560-schematic.pdf
 
 **Goal**

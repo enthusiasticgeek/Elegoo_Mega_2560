@@ -78,7 +78,6 @@ int main(void){
    sei();          // enable all interrupts
    Led_init();     // init LEDs for testing
    value = 'A';    // 0x41;    
-   //PORTB = ~value; // 0 = LED on
    for(;;){                  // Repeat indefinitely
      PORTB = PORTB ^ _BV(PORTB7);// toggle built in LED on TX
      USART_SendByte(value);  // send value 

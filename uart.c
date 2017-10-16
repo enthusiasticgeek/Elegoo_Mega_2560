@@ -3,6 +3,10 @@
 // Connect RX1 pin of the AVR to TX pin of the serial converter 
 // Connect TX1 pin of the AVR to RX pin of the serial converter 
 // Connect GND pin of the AVR to GND pin of the serial converter 
+// Open terminal. if /dev/ttyUSB0 is connected as serial device
+// 'sudo minicom -s configuration ttyUSB0'
+// set baudrate 115200 8N1 (no parity, 8 bit data, 1 stop bit). Then press CTRL+a. Then press x.
+// 'sudo minicom configuration ttyUSB0' and press ENTER 
 
 /*Very Important - change F_CPU to match target clock 
   Note: default AVR clock is 16MHz external crystal

@@ -207,7 +207,7 @@ while(1){
     USART_SendByte('\r');           // Send linefeed
     send_prompt=0;
  }
-
+ //Stepper motor control logic
  switch(step){ 
    case 0: 
      PORTB &= ~_BV(PORTB4);

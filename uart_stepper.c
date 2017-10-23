@@ -30,6 +30,11 @@ use a driver like ULN2003A etc.
 // 'sudo minicom -s configuration ttyUSB0'
 // set baudrate 115200 8N1 (no parity, 8 bit data, 1 stop bit). Then press CTRL+a. Then press x.
 // 'sudo minicom configuration ttyUSB0' and press ENTER few times and follow the instructions.
+// Now send commands
+// To rotate clockwise fast e.g. send command 'CW,F'
+// To stop e.g. send command 'STP'
+// To rotate counter clockwise slow send command  'CCW,S'
+// To rotate clockwise medium speed e.g. 'CW,M'
 
 /*Very Important - change F_CPU to match target clock 
   Note: default AVR clock is 16MHz external crystal
@@ -270,7 +275,7 @@ while(1){
  if(step<0){ 
    step=7; 
  }
- 
+//Fast, slow or medium angular velocity rotation
 if(strncmp(speed,"F",1)==0){
  _delay_ms(1);
 } else if (strncmp(speed,"M",1)==0){

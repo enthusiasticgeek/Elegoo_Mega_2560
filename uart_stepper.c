@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 #include <string.h>
+#include <stdbool.h>
 
 /*
 Position where 1st coil is connected.
@@ -78,38 +79,61 @@ int send_prompt=1;
   /* 1 => counter-clockwise */
 volatile int8_t dir = STOP;
 char speed[2];
+char checksum_received_string[3];
+bool checksum_match = false;
+char checksum_calc_string[20];
 
+unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length);
+unsigned short checksum_received;
 ISR(USART1_RX_vect)
-{
+{   
+    int k;
+    for(k=0; k < strlen(checksum_calc_string); k++){
+       checksum_calc_string[k]='\0';
+    }
     buffer[i]=UDR1;         //Read USART data register
     if(buffer[i++]=='\r')   //check for carriage return terminator and increment buffer index
     {
         //Now parse the string
-
         //j represent fields separated by comma delimiter.
         uint8_t j=0;
         const char delimiter[2] = ",";
         char *token=NULL;
         /* get the first token */
         token = strtok(buffer, delimiter);
-        if(j==0){
-		if(strncmp(token,"CW",2)==0){
-		   dir = CLOCKWISE;
-		} else if (strncmp(token,"CCW",3)==0){
-		   dir = COUNTER_CLOCKWISE;
-		} else if (strncmp(token,"STP",3)==0){
-		   dir = STOP;
-		}
+        if((j==0) && (token != NULL)){
+	   if(strncmp(token,"CW",2)==0){
+	     dir = CLOCKWISE;
+	   } else if (strncmp(token,"CCW",3)==0){
+	     dir = COUNTER_CLOCKWISE;
+	   } else if (strncmp(token,"STP",3)==0){
+	     dir = STOP;
+	   }
+           strncat(checksum_calc_string,token,strlen(token));
         } 
         /* walk through other tokens */
-        while( token != NULL ) {
+        while( token != NULL ){
           j++;
           token = strtok(NULL, delimiter);
-          if(j==1){
+          if((j==1) && (token != NULL)){
             /*set speed*/
             strncpy(speed,token,1);
+            strncat(checksum_calc_string,token,strlen(token));
           }
-       }
+          
+          if((j==2) && (token != NULL)){
+            //checksum
+            strncpy(checksum_received_string,token,2);
+            checksum_received = ((checksum_received_string[1] << 8) & 0xFF00) | (checksum_received_string[0] & 0xFF);
+            unsigned short checksum_calculated = crc16_ccitt(checksum_calc_string,strlen(checksum_calc_string));
+            if(checksum_calculated == checksum_received){
+               checksum_match = true;
+            } else {
+               checksum_match = false;
+            }
+          } 
+          
+        }
 
         // if terminator detected
         StrRxFlag=1;        //Set String received flag
@@ -160,6 +184,17 @@ unsigned char CheckSum(char *buffer)
     for (xor = 0, i = 0; i < length; i++)
         xor ^= (unsigned char)buffer[i];
     return xor;
+}
+
+unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length){
+    unsigned char x;
+    unsigned short crc = 0xFFFF;
+    while (length--){
+        x = crc >> 8 ^ *data_p++;
+        x ^= x>>4;
+        crc = (crc << 8) ^ ((unsigned short)(x << 12)) ^ ((unsigned short)(x <<5)) ^ ((unsigned short)x);
+    }
+    return crc;
 }
 
 int main(){

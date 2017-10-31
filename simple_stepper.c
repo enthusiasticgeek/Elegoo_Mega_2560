@@ -1,4 +1,4 @@
-//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
+//Copyright (c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdint.h>

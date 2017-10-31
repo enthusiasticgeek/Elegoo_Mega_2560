@@ -80,7 +80,7 @@ int send_prompt=1;
 volatile int8_t dir = STOP;
 char speed[2];
 char checksum_received_string[3];
-bool checksum_match = false;
+volatile bool checksum_match = false;
 char checksum_calc_string[20];
 
 unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length);
@@ -299,9 +299,9 @@ while(1){
      PORTB &= ~_BV(PORTB4);
    break;  
  }
- if(dir == COUNTER_CLOCKWISE){ 
+ if((dir == COUNTER_CLOCKWISE)&&(checksum_match==true)){ 
   step++;
- }else if (dir == CLOCKWISE){
+ }else if ((dir == CLOCKWISE)&&(checksum_match==true)){
   step--;
  }
  if(step>7){ 
@@ -311,11 +311,11 @@ while(1){
    step=7; 
  }
 //Fast, slow or medium angular velocity rotation
-if(strncmp(speed,"F",1)==0){
+if((strncmp(speed,"F",1)==0)&&(checksum_match==true)){
  _delay_ms(1);
-} else if (strncmp(speed,"M",1)==0){
+} else if((strncmp(speed,"M",1)==0)&&(checksum_match==true)){
  _delay_ms(5);
-} else if (strncmp(speed,"S",1)==0){
+} else if((strncmp(speed,"S",1)==0)&&(checksum_match==true)){
  _delay_ms(10);
 }else {
  _delay_ms(20);

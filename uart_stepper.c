@@ -317,7 +317,7 @@ if((strncmp(speed,"F",1)==0)&&(checksum_match==true)){
  _delay_ms(5);
 } else if((strncmp(speed,"S",1)==0)&&(checksum_match==true)){
  _delay_ms(10);
-}else {
+} else {
  _delay_ms(20);
 }
 

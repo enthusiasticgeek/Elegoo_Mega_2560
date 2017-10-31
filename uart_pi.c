@@ -1,4 +1,6 @@
-//This file is to be run from Rpi (UART ttyAMA0 connection)
+//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
+//This file is to be run from Raspberry pi 1 or 2 (UART ttyAMA0 connection) - GPIO14 (TXD) and GPIO15 (RXD)
+//For Raspberry Pi 3 please adjust /dev/ttyAMA0 to something else.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

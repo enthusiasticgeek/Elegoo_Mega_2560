@@ -87,6 +87,7 @@ unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length);
 unsigned short checksum_received;
 ISR(USART1_RX_vect)
 {   
+    //initialize char array with the terminating character	
     int k;
     for(k=0; k < strlen(checksum_calc_string); k++){
        checksum_calc_string[k]='\0';

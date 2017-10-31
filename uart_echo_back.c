@@ -1,4 +1,4 @@
-//(c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
+//Copyright (c) 2017 Pratik M Tambe <enthusiasticgeek@gmail.com>
 // Tested with WINGONEER USB 2.0 to TTL UART 6PIN CP2102 Module Serial Converter
 // Connect RX1 pin of the AVR to TX pin of the serial converter 
 // Connect TX1 pin of the AVR to RX pin of the serial converter 

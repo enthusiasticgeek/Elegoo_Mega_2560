@@ -24,7 +24,7 @@ To teach the reader how to program Arduino based on AVR ATMEGA 2560 directly usi
 
 1. Issue the following command while setting the '**file**' variable to C source as one wishes (without file extension) for building source code. (e.g. for *blink_led.c*) source file issue the command **make file=blink_led**
 2. Then to load the hex file (e.g. for *blink_led.hex*) hex file issue the command **make burn file=blink_led** after connecting USB cable to Elegoo Atmega 2560.
-   **Note:** This will require the user to enter password.
+   **Note:** This will require the user to enter user password.
    
    **Note:** avrdude.conf file was adapted from Arduino Linux tgz package.
       

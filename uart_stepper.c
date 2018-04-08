@@ -5,6 +5,10 @@
 #include <avr/interrupt.h>
 #include <string.h>
 #include <stdbool.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*
 Position where 1st coil is connected.
@@ -18,7 +22,8 @@ AVR 10 - PB4 (IN1 on ULN2003 board) -> Coil 1
 AVR 11 - PB5 (IN2 on ULN2003 board) -> Coil 2
 AVR 12 - PB6 (IN3 on ULN2003 board) -> Coil 3
 AVR 13 - PB7 (IN4 on ULN2003 board) -> Coil 4
-
+ELEGOO ANALOG GND - (GND on ULN2003 board) -> This is usually last pin on the side away from resistors depending on the ULN2003 board layout
+ELEGOO ANALOG +5V - (+5V on ULN2003 board) -> This is usually 2nd pin on the side away from resistors depending on the ULN2003 board layout
 Don't connect port pins directly to coil,
 use a driver like ULN2003A etc.
 
@@ -62,7 +67,7 @@ COUNTER_CLOCKWISE=1,
 //#define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 #define BAUD_PRESCALE (unsigned int)( F_CPU / (16.0 * USART_BAUDRATE) - 0.5 )
 
-unsigned char value;  
+//unsigned char value;  
 /* This variable is volatile so both main and RX interrupt can use it.
 It could also be a uint8_t type */
 
@@ -71,22 +76,25 @@ NOTE: vector name changes with different AVRs see AVRStudio -
 Help - AVR-Libc reference - Library Reference - <avr/interrupt.h>: Interrupts
 for vector names other than USART_RXC_vect for ATmega32 */
 
+volatile int32_t step_counter=0;
 volatile int i=0;
-char buffer[20];
+char buffer[20]={};
 volatile uint8_t StrRxFlag=0;
 int send_prompt=1;
   /* 0 => clockwise */
   /* 1 => counter-clockwise */
 volatile int8_t dir = STOP;
-char speed[2];
-char checksum_received_string[3];
+char speed[2]={};
+int32_t total_steps=-1;
+char checksum_received_string[3]={};
 volatile bool checksum_match = false;
-char checksum_calc_string[20];
+char checksum_calc_string[20]={};
 
 unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length);
 unsigned short checksum_received;
 ISR(USART1_RX_vect)
 {   
+    step_counter=0;
     //initialize char array with the terminating character	
     int k;
     for(k=0; k < strlen(checksum_calc_string); k++){
@@ -121,12 +129,28 @@ ISR(USART1_RX_vect)
             strncpy(speed,token,1);
             strncat(checksum_calc_string,token,strlen(token));
           }
-          
           if((j==2) && (token != NULL)){
+            /*set steps*/
+            /*
+	    errno = 0;
+            long int result = strtol (buffer, &token, sizeof(token));
+            if (result == LONG_MIN && errno != 0) 
+            {
+               // Underflow.
+            }
+            if (result == LONG_MAX && errno != 0) 
+            {
+               // Overflow.
+            }
+            */
+            total_steps = atoi(token);
+            strncat(checksum_calc_string,token,strlen(token));
+          }
+          if((j==3) && (token != NULL)){
             //checksum
             strncpy(checksum_received_string,token,2);
             checksum_received = ((checksum_received_string[1] << 8) & 0xFF00) | (checksum_received_string[0] & 0xFF);
-            unsigned short checksum_calculated = crc16_ccitt(checksum_calc_string,strlen(checksum_calc_string));
+            unsigned short checksum_calculated = crc16_ccitt((const unsigned char*)checksum_calc_string,strlen(checksum_calc_string));
             if(checksum_calculated == checksum_received){
                checksum_match = true;
             } else {
@@ -180,11 +204,11 @@ void USART_putstring(char* StringPtr){
 unsigned char CheckSum(char *buffer)
 {
     uint8_t i;
-    unsigned char xor;
+    unsigned char xor_1;
     unsigned long length = strlen(buffer);
-    for (xor = 0, i = 0; i < length; i++)
-        xor ^= (unsigned char)buffer[i];
-    return xor;
+    for (xor_1 = 0, i = 0; i < length; i++)
+        xor_1 ^= (unsigned char)buffer[i];
+    return xor_1;
 }
 
 unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length){
@@ -301,9 +325,27 @@ while(1){
    break;  
  }
  if((dir == COUNTER_CLOCKWISE)&&(checksum_match==true)){ 
-  step++;
+    if(total_steps>0){
+      if(step_counter < total_steps)
+      {
+        step_counter++;
+        step++;
+      }
+    }
+    else{
+       step++;
+    }
  }else if ((dir == CLOCKWISE)&&(checksum_match==true)){
-  step--;
+    if(total_steps>0){
+      if(step_counter < total_steps)
+      {
+        step_counter++;
+        step--;
+      }
+    }
+    else{
+       step--;
+    }
  }
  if(step>7){ 
    step=0; 

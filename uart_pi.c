@@ -14,22 +14,25 @@
 
 void usage(char* argv){
  printf("Usage: %s [OPTIONS]\n", argv);
+ printf("  -i interface              USART interface /dev/ttyAMA0, /dev/ttyUSB0, etc\n");
  printf("  -d direction              <CCW,CW,STP> for Counter-Clockwise, Clockwise, Stop\n");
  printf("  -s speed                  <F,M,S> for Fast, Medium, and Slave\n");
+ printf("  -t steps                  -1 or negative numbers -> Don't care. Positive numbers -> 0 - 999999999 valid\n");
+ printf("  -a angle                  angle in 0 to 360 degrees\n");
  printf("  -h, --help                print this help and exit\n");
- printf("   Example to rotate Counter-Clockwise Fast\n %s -d CCW -s F", argv);
+ printf("   Example to rotate Counter-Clockwise Fast\n %s -d CCW -s F -t -1", argv);
  printf("\n");
 }
 
 unsigned char CheckSum(char *buffer)
 {
   uint8_t i;
-  unsigned char xor;
+  unsigned char xor_1;
   unsigned long length = strlen(buffer);
-  for (xor = 0, i = 0; i < length; i++){
-       xor ^= (unsigned char)buffer[i];
+  for (xor_1 = 0, i = 0; i < length; i++){
+       xor_1 ^= (unsigned char)buffer[i];
   }
-  return xor;
+  return xor_1;
 }
 
 unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length){
@@ -45,21 +48,33 @@ unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length){
 
 int main(int argc, char * argv[]){
 
- if(argc < 5){
+ if(argc < 9){
    usage(argv[0]);
    exit(0);
  }
 
- char direction[4];
- char speed[2];
+ char interface[256]={};
+ char direction[4]={};
+ char speed[2]={};
+ char steps[10]={};
+ char rotation_angle[4]={};
+ double rotate = 0.0;
+ int rotate_steps=0;
+
+ //Some flags
+ int t_option_specified=0;
+ int a_option_specified=0;
 
  int c;
- const char* short_opt = "hd:s:";
+ const char* short_opt = "hi:d:s:t:a:";
  struct option  long_opt[] =
  {
       {"help",           no_argument,       NULL, 'h'},
+      {"interface",      required_argument, NULL, 'i'},
       {"direction",      required_argument, NULL, 'd'},
       {"speed",          required_argument, NULL, 's'},
+      {"steps",          required_argument, NULL, 't'},
+      {"angle",          required_argument, NULL, 'a'},
       {NULL,             0,                 NULL,  0 }
  };
 
@@ -71,10 +86,19 @@ int main(int argc, char * argv[]){
          case 0:        /* long options toggles */
          break;
 
+         case 'i':
+         printf("INTERFACE: \"%s\"\n", optarg);
+         if(strlen(optarg)>sizeof(interface)) {
+           printf("Invalid argument for interface\n");
+           exit(-1);
+         }
+         snprintf(interface,sizeof(interface),"%s",optarg);
+         break;
+
          case 'd':
          printf("DIRECTION: \"%s\"\n", optarg);
          if(strlen(optarg)>sizeof(direction)) {
-           printf("Invalid argument for direction");
+           printf("Invalid argument for direction\n");
            exit(-1);
          }
          snprintf(direction,sizeof(direction),"%s",optarg);
@@ -83,10 +107,53 @@ int main(int argc, char * argv[]){
          case 's':
          printf("SPEED: \"%s\"\n", optarg);
          if(strlen(optarg)>sizeof(speed)) {
-           printf("Invalid argument for speed");
+           printf("Invalid argument for speed\n");
            exit(-1);
          }
          snprintf(speed,sizeof(speed),"%s",optarg);
+         break;
+
+         case 't':
+         t_option_specified=1;
+         if(a_option_specified == 1)
+         {
+            printf("***Error: Cannot use t and a options simultaneously.***\n Use one or the other\n");          
+            usage(argv[0]);
+            return(-3);
+         }
+         printf("STEPS: \"%s\"\n", optarg);
+         if(strlen(optarg)>sizeof(steps)) {
+           printf("Invalid argument for steps\n");
+           exit(-1);
+         }
+         snprintf(steps,sizeof(steps),"%s",optarg);
+         break;
+
+         case 'a':
+         a_option_specified=1;
+         if(t_option_specified == 1)
+         {
+            printf("***Error: Cannot use t and a options simultaneously.***\n Use one or the other\n");          
+            usage(argv[0]);
+            return(-3);
+         }
+         printf("ROTATION ANGLE: \"%s\"\n", optarg);
+         if(strlen(optarg)>sizeof(rotation_angle)) {
+           printf("Invalid argument for rotation angle\n");
+           exit(-1);
+         }
+         rotate = (double)atof(optarg);
+         if((rotate > 360.0)||(rotate < 1.0))
+         {
+           printf("Rotation value should be between 1 and 360 only\n");
+           usage(argv[0]);
+           return(-4);
+         }  
+         //5.625 degrees is 64 steps
+         //Hence, 360 degrees = (360/5.625)*64 = 4096 steps 
+         //
+         rotate_steps =(int)(double(double(rotate/360.0)*4096));
+         snprintf(steps,sizeof(steps),"%d",rotate_steps);
          break;
 
          case 'h':
@@ -110,7 +177,9 @@ int main(int argc, char * argv[]){
 //-------------------------
 //At bootup, pins 8 and 10 are already set to UART0_TXD, UART0_RXD (ie the alt0 function) respectively
 int uart0_filestream = -1;
-const char* UART_PORT="/dev/ttyAMA0";
+//const char* UART_PORT="/dev/ttyAMA0";
+//const char* UART_PORT="/dev/ttyUSB0";
+const char* UART_PORT=(const char*)interface;
 
 //OPEN THE UART
 //The flags (defined in fcntl.h):
@@ -151,13 +220,13 @@ tcflush(uart0_filestream, TCIFLUSH);
 tcsetattr(uart0_filestream, TCSANOW, &options);
 
 //----- TX BYTES -----
-unsigned char tx_buffer[20];
+unsigned char tx_buffer[20]={};
 unsigned char *p_tx_buffer;
 
 p_tx_buffer = &tx_buffer[0];
 
 int i;
-char checksum_sent_string[20];
+char checksum_sent_string[20]={};
 
 //Direction - Field 1
 int len = strlen(direction);
@@ -166,6 +235,7 @@ for (i = 0; i < len; i++){
 }
 strncat(checksum_sent_string,direction,strlen(direction));
 *p_tx_buffer++ = ',';
+
 //Speed - Field 2
 len = strlen(speed);
 for (i = 0; i < len; i++){
@@ -173,9 +243,18 @@ for (i = 0; i < len; i++){
 }
 strncat(checksum_sent_string,speed,strlen(speed));
 *p_tx_buffer++ = ',';
-//Checksum - Field 3
 
-unsigned short send_checksum = crc16_ccitt(checksum_sent_string,strlen(checksum_sent_string));
+//Steps - Field 3
+len = strlen(steps);
+for (i = 0; i < len; i++){
+ *p_tx_buffer++ = steps[i];
+}
+strncat(checksum_sent_string,steps,strlen(steps));
+*p_tx_buffer++ = ',';
+
+//Checksum - Field 4
+
+unsigned short send_checksum = crc16_ccitt((const unsigned char*)checksum_sent_string,strlen(checksum_sent_string));
 char send_checksum_char[2];
 send_checksum_char[0] = (char)(send_checksum & 0xFF);
 send_checksum_char[1] = (char)((send_checksum >> 8) & 0xFF);

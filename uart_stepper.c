@@ -95,6 +95,7 @@ unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length);
 unsigned short checksum_received;
 ISR(USART1_RX_vect)
 {
+    checksum_match=false;
     step_counter=0;
     //initialize char array with the terminating character
     int k;

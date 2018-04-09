@@ -106,7 +106,7 @@ ISR(USART1_RX_vect)
     {
         //Make a copy
         memset(buffer_send, '\0', sizeof(buffer_send));
-        strncpy(buffer_send, buffer, sizeof(buffer));
+        //strncpy(buffer_send, buffer, sizeof(buffer-1));
 
         //Now parse the string
         //j represent fields separated by comma delimiter.
@@ -124,6 +124,9 @@ ISR(USART1_RX_vect)
                 dir = STOP;
             }
             strncat(checksum_calc_string,token,strlen(token));
+            //copy to char buffer to be echoed back to the receiver
+            strncat(buffer_send,token,strlen(token));
+            strncat(buffer_send,",",1);
         }
         /* walk through other tokens */
         while( token != NULL ) {
@@ -133,6 +136,9 @@ ISR(USART1_RX_vect)
                 /*set speed*/
                 strncpy(speed,token,1);
                 strncat(checksum_calc_string,token,strlen(token));
+                //copy to char buffer to be echoed back to the receiver
+                strncat(buffer_send,token,strlen(token));
+                strncat(buffer_send,",",1);
             }
             if((j==2) && (token != NULL)) {
                 /*set steps*/
@@ -150,6 +156,9 @@ ISR(USART1_RX_vect)
                 */
                 total_steps = atoi(token);
                 strncat(checksum_calc_string,token,strlen(token));
+                //copy to char buffer to be echoed back to the receiver
+                strncat(buffer_send,token,strlen(token));
+                strncat(buffer_send,",OK",3);
             }
             if((j==3) && (token != NULL)) {
                 //checksum
@@ -166,6 +175,9 @@ ISR(USART1_RX_vect)
         }
 
         // if terminator detected
+
+        //strncpy(buffer_send, buffer, sizeof(buffer_send));
+        //snprintf(buffer_send, sizeof(buffer_send),"%d,%s,%s\n\r",dir,speed,total_steps);
         StrRxFlag=1;        //Set String received flag
         buffer[i-1]=0x00;   //Set string terminator to 0x00
         i=0;                //Reset buffer index
@@ -261,9 +273,6 @@ int main() {
         {
             //Echo the string back
             USART_putstring(buffer_send);
-            USART_SendByte('\n');           // Send linefeed
-            USART_SendByte('O');           // Send linefeed
-            USART_SendByte('K');           // Send linefeed
             USART_SendByte('\r');           // Send carriage return
             USART_SendByte('\n');           // Send linefeed
             StrRxFlag=0;                // Reset String received flag

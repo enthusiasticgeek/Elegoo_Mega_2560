@@ -90,6 +90,7 @@ int32_t total_steps=-1;
 char checksum_received_string[3]= {};
 volatile bool checksum_match = false;
 char checksum_calc_string[255]= {};
+char checksum_sent_string[255]= {};
 
 unsigned short crc16_ccitt(const unsigned char* data_p, unsigned char length);
 unsigned short checksum_received;
@@ -101,6 +102,9 @@ ISR(USART1_RX_vect)
     int k;
     for(k=0; k < strlen(checksum_calc_string); k++) {
         checksum_calc_string[k]='\0';
+    }
+    for(k=0; k < strlen(checksum_sent_string); k++) {
+        checksum_sent_string[k]='\0';
     }
     buffer[i]=UDR1;         //Read USART data register
     if(buffer[i++]=='\r')   //check for carriage return terminator and increment buffer index
@@ -125,6 +129,7 @@ ISR(USART1_RX_vect)
                 dir = STOP;
             }
             strncat(checksum_calc_string,token,strlen(token));
+            strncat(checksum_sent_string,token,strlen(token));
             //copy to char buffer to be echoed back to the receiver
             strncat(buffer_send,token,strlen(token));
             strncat(buffer_send,",",1);
@@ -137,6 +142,7 @@ ISR(USART1_RX_vect)
                 /*set speed*/
                 strncpy(speed,token,1);
                 strncat(checksum_calc_string,token,strlen(token));
+                strncat(checksum_sent_string,token,strlen(token));
                 //copy to char buffer to be echoed back to the receiver
                 strncat(buffer_send,token,strlen(token));
                 strncat(buffer_send,",",1);
@@ -157,9 +163,15 @@ ISR(USART1_RX_vect)
                 */
                 total_steps = atoi(token);
                 strncat(checksum_calc_string,token,strlen(token));
+                strncat(checksum_sent_string,token,strlen(token));
                 //copy to char buffer to be echoed back to the receiver
                 strncat(buffer_send,token,strlen(token));
-                strncat(buffer_send,",OK",3);
+                strncat(buffer_send,",",1);
+		unsigned short send_checksum = crc16_ccitt((const unsigned char*)checksum_sent_string,strlen(checksum_sent_string));
+		char send_checksum_char[2]={};
+		send_checksum_char[0] = (char)(send_checksum & 0xFF);
+		send_checksum_char[1] = (char)((send_checksum >> 8) & 0xFF);
+		strncat(buffer_send,send_checksum_char,strlen(send_checksum_char));
             }
             if((j==3) && (token != NULL)) {
                 //checksum
@@ -176,6 +188,7 @@ ISR(USART1_RX_vect)
         }
 
         // if terminator detected
+        strncat(buffer_send,"OK",2);
 
         //strncpy(buffer_send, buffer, sizeof(buffer_send));
         //snprintf(buffer_send, sizeof(buffer_send),"%d,%s,%s\n\r",dir,speed,total_steps);

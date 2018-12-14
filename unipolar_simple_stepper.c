@@ -19,6 +19,10 @@ AVR 13 - PB7 (IN4 on ULN2003 board) -> Coil 4
 Don't connect port pins directly to coil,
 use a driver like ULN2003A etc.
 
+Unipolar stepper 5 wires - like 28-BYJ48
+
+5th wire connected to motor voltage e.g. 5V
+
 */
 
 int main(){

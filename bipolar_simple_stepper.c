@@ -23,6 +23,11 @@ bipolar stepper either 4 or 6 wires - like NEMA 17 stepper
 
 5th wire connected to motor voltage e.g. 5V
 
+https://42bots.com/tutorials/bipolar-stepper-motor-control-with-arduino-and-an-h-bridge/
+https://42bots.com/tutorials/stepper-motor-wiring-how-to/
+https://dronebotworkshop.com/stepper-motors-with-arduino/
+https://www.onetransistor.eu/2017/11/unipolar-stepper-motors-arduino-driver.html
+
 */
 
 int main(){

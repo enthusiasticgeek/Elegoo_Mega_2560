@@ -88,11 +88,11 @@ while(1){
  }else{
   step--;
  }
- if(step>7){ 
+ if(step>3){ 
    step=0; 
  } 
  if(step<0){ 
-   step=7; 
+   step=3; 
  } 
  _delay_ms(5);
  }

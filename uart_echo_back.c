@@ -45,6 +45,7 @@ int send_prompt=1;
 
 ISR(USART1_RX_vect)
 {
+    cli();
     buffer[i]=UDR1;         //Read USART data register
     if(buffer[i++]=='\r')   //check for carriage return terminator and increment buffer index
     {
@@ -53,6 +54,7 @@ ISR(USART1_RX_vect)
         buffer[i-1]=0x00;   //Set string terminator to 0x00
         i=0;                //Reset buffer index
     }
+    sei();
 }
 
 void USART_Init(void){
@@ -116,6 +118,7 @@ int main(void){
             USART_putstring(buffer);
             USART_SendByte('\r');           // Send carriage return
             USART_SendByte('\n');           // Send linefeed
+            memset(buffer, '\0', sizeof(buffer)); //reset buffer
             StrRxFlag=0;                // Reset String received flag
             send_prompt=1;
         }

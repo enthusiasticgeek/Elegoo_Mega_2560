@@ -6,7 +6,7 @@ ATMEGA=m2560
 DEVICE=/dev/ttyACM0
 BAUD=115200
 all:
-	avr-gcc -Os -DF_CPU=16000000UL -mmcu=$(MMCU) -c -o $(file).o $(file).c
+	avr-gcc -Os -DF_CPU=16000000UL -mmcu=$(MMCU) -c -o $(file).o $(file).c -Wl,-u,vfprintf -lprintf_flt -lm
 	avr-gcc -mmcu=$(MMCU) $(file).o -o $(file)
 	#EEPROM
 	#avr-objcopy -O ihex -R .eeprom $(file) $(file).hex

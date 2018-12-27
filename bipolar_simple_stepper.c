@@ -28,6 +28,9 @@ https://42bots.com/tutorials/stepper-motor-wiring-how-to/
 https://dronebotworkshop.com/stepper-motors-with-arduino/
 https://www.onetransistor.eu/2017/11/unipolar-stepper-motors-arduino-driver.html
 
+Batteries
+https://www.batteryspace.com/LiFePO4/LiFeMnPO4-Batteries.aspx
+
 */
 
 int main(){

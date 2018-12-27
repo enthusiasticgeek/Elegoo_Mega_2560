@@ -22,7 +22,7 @@ use a driver like ULN2003A etc.
 Unipolar stepper 5 wires - like 28-BYJ48
 
 5th wire connected to motor voltage e.g. 5V
-
+https://www.onetransistor.eu/2017/11/unipolar-stepper-motors-arduino-driver.html
 */
 
 int main(){
